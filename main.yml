@@ -1,0 +1,50 @@
+1 --- 
+2 - name: Inventory file validation 
+3   hosts: localhost 
+4   gather_facts: false 
+5   tasks: 
+6     - stat: path=./data/Server_Inventory_Linux.xlsx 
+7       register: Inv_file 
+8     - name: Check if the file exists in the directory 
+9       fail: 
+10         msg: "The inventory file is already processed for this month" 
+11       when: Inv_file.stat.exists 
+12        
+13 - name: excel to CSV file conversion method starts 
+14   hosts: localhost 
+15   gather_facts: false 
+16 - import_playbook: xls_to_csv.yml 
+17 
+ 
+18 - name: CSV to yaml file converstion 
+19   hosts: localhost 
+20   gather_facts: false 
+21   tasks: 
+22     - debug: 
+23         msg: "Conversion process begins"    
+24 - import_playbook: csv_to_yml.yml 
+25      
+26 - name: Conversion process end 
+27   hosts: localhost  
+28   tasks: 
+29     - debug:  
+30         msg: "Conversion process completed successfully" 
+31 
+ 
+32 - name: Change creation process begins 
+33   hosts: localhost 
+34 - import_playbook: change_creation_yaml.yml 
+35 
+ 
+36 - name: Change creation process end 
+37   hosts: localhost 
+38   tasks: 
+39     - debug:  
+40         msg: "change creation process completed successfully" 
+41          
+42 - name: Copy the file into the data folder 
+43   hosts: localhost 
+44   tasks: 
+45   - copy: 
+46       src: ./Server_Inventory_Linux.xlsx 
+47       dest: ./data/ 

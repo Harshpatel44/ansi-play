@@ -1,0 +1,36 @@
+1 --- 
+2 - gather_facts: false 
+3   hosts: localhost 
+4   vars_files: 
+5     - Server_Inventory_hosts.yml 
+6   tasks: 
+7   - name: Create a change ticket in SNOW  
+8     register: new_change_request 
+9     snow_record: 
+10       data: 
+11         u_environment: "{{Environment[{{ item }}]}}" 
+12         cmdb_ci: "{{CI[{{ item }}]}}" 
+13         start_date: "{{Release_date[{{ item }}]}}" 
+14         short_description: "{{Short_Description[{{ item }}]}}" 
+15         category: "{{Category[{{ item }}]}}" 
+16         assignment_group: "{{Assigned_Group[{{ item }}]}}" 
+17         assigned_to: "{{Assigned_To[{{ item }}]}}" 
+18         u_change_coordinator: "{{Change_Coordinator[{{ item }}]}}" 
+19         u_technical_approver: "{{Technical_Approver[{{ item }}]}}" 
+20         type: "{{Patching_Type[{{ item }}]}}" 
+21         implementation_plan: "{{Implemention_Plan[{{ item }}]}}" 
+22         backout_plan: "{{BackoutPlan[{{ item }}]}}" 
+23         test_plan: "{{ValidationPlan[{{ item }}]}}" 
+24         requested_by: Abel Tuter 
+25         description: '2021| NON PROD Q3 Linux Patching QA' 
+26         u_director_approval: '.Caitlin Reiniger' 
+27         u_product_approval: '.Abraham Lincoln' 
+28         u_sr_director_approval: '.Adela Cervantsz' 
+29         u_vp_approval: '.Barbara Hindley' 
+30       instance: dev50141 
+31       password: Welsnow321# 
+32       state: present 
+33       table: change_request 
+34       username: admin 
+       with_sequence: count="{{ list|length }}"
+       

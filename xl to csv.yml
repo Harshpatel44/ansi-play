@@ -1,0 +1,4 @@
+1 --- 
+2 - hosts: localhost 
+3   tasks: 
+4   - shell: xlsx2csv Server_Inventory_Linux.xlsx Server_Inventory_Linux.csv 
